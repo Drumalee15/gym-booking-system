@@ -1,0 +1,51 @@
+/* General styles for the navbar */
+.navbar {
+  background-color: #343a40; /* dark background color */
+  padding: 1rem; /* padding for better spacing */
+}
+
+/* Brand styles */
+.navbar-brand {
+  color: #ffffff; /* white color for the brand text */
+  font-size: 1.5rem; /* larger font size for the brand */
+  font-weight: bold; /* bold font for emphasis */
+}
+
+/* Toggle button for small screens */
+.navbar-toggler {
+  border-color: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ); /* light border color for the toggle button */
+}
+
+/* Nav link styles */
+.nav-link {
+  color: #ffffff; /* white color for the nav links */
+  margin-right: 1rem; /* margin for spacing between links */
+  font-size: 1rem; /* standard font size for nav links */
+  transition: color 0.3s ease; /* smooth transition for color change */
+}
+
+/* Hover effect for nav links */
+.nav-link:hover {
+  color: #cccccc; /* light gray color on hover */
+}
+
+/* Active link styles */
+.nav-link.active {
+  color: #00bfff; /* light blue color for active links */
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .navbar-collapse {
+    background-color: #343a40; /* maintain background color for collapsed menu */
+  }
+
+  .nav-link {
+    margin: 0.5rem 0; /* adjust margin for collapsed menu links */
+  }
+}

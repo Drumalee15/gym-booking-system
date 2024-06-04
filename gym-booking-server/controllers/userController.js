@@ -1,12 +1,18 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const CryptoJS = require("crypto-js");
 const User = require("../models/User");
 require("dotenv").config();
 
 exports.registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { data } = req.body;
 
   try {
+    const bytes = CryptoJS.AES.decrypt(data, "your_secret_key");
+    const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
+    const { username, email, password } = decryptedData;
+
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ msg: "User already exists" });
@@ -44,9 +50,14 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { data } = req.body;
 
   try {
+    const bytes = CryptoJS.AES.decrypt(data, "your_secret_key");
+    const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
+    const { email, password } = decryptedData;
+
     let user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ msg: "Invalid Credentials" });

@@ -1,20 +1,73 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Register from "./components/Auth/Register";
-import Login from "./components/Auth/Login";
+import * as React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import HomeScreen from "./screens/HomeScreen";
+import ClassDetailScreen from "./screens/ClassDetailScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import BookingScreen from "./screens/BookingScreen";
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 import Navbar from "./components/Layout/Navbar";
-import Dashboard from "./components/Dashboard/Dashboard";
+import AuthProvider, { useAuth } from "./contexts/AuthContext";
+
+interface PrivateRouteProps {
+  children: React.ReactNode;
+}
+
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+};
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route
+            path="/home"
+            element={
+              <PrivateRoute>
+                <HomeScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/booking/:id"
+            element={
+              <PrivateRoute>
+                <BookingScreen />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/class/:id"
+            element={
+              <PrivateRoute>
+                <ClassDetailScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <ProfileScreen />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/login" element={<LoginScreen />} />
+          <Route path="/register" element={<RegisterScreen />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 

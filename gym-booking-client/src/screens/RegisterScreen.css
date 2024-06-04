@@ -1,0 +1,90 @@
+/* General styles for the entire form container */
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: url("../assets/background-image.jpg") no-repeat center
+    center/cover;
+  padding: 0 1rem;
+  background-size: cover;
+}
+
+/* Style for the form */
+.register-form {
+  background: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Style for the logo */
+.register-form img {
+  width: 100px; /* Adjust the size as needed */
+  margin-bottom: 2rem;
+}
+
+/* Style for the input fields */
+.register-form input[type="text"],
+.register-form input[type="email"],
+.register-form input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Style for the submit button */
+.register-form input[type="submit"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.register-form input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Style for the error message */
+.register-form .error {
+  color: red;
+  margin-bottom: 1rem;
+}
+
+/* Style for the login link */
+.register-form p {
+  margin-top: 1rem;
+  color: #ffffff;
+}
+
+.register-form a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.register-form a:hover {
+  color: #0056b3;
+}
+
+/* Responsive adjustments for mobile view */
+@media (max-width: 1024px) {
+  .register-container {
+    height: 70vh; /* Ensure full-screen height for mobile view */
+  }
+}
