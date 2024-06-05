@@ -7,6 +7,7 @@ interface Class {
   id: string;
   name: string;
   image: string;
+  description: string;
 }
 
 const HomeScreen: React.FC = () => {
@@ -48,6 +49,7 @@ const HomeScreen: React.FC = () => {
           >
             <img src={cls.image} alt={cls.name} />
             <h3>{cls.name}</h3>
+            <p>{cls.description}</p>
           </div>
         ))}
       </div>

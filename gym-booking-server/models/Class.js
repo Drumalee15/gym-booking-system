@@ -14,12 +14,20 @@ const ClassSchema = new mongoose.Schema({
     required: true,
   },
   schedule: {
-    type: String,
+    type: Date,
     required: true,
   },
   instructor: {
     type: String,
     required: true,
+  },
+  capacity: {
+    type: Number,
+    required: true,
+  },
+  booked: {
+    type: Number,
+    default: 0,
   },
   bookings: [
     {

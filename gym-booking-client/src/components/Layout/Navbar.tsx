@@ -4,15 +4,15 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import "./Navbar.css";
 
-const NavigationBar: React.FC = () => {
+const NavBar: React.FC = () => {
   const { isAuthenticated, logout } = useAuth();
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
-      <Navbar.Brand href="/"></Navbar.Brand>
+    <Navbar bg="dark" variant="dark" expand="lg" className="navigation-bar">
+      <Navbar.Brand href="/" className="navbar-brand"></Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
+        <Nav className="ml-auto">
           {isAuthenticated ? (
             <>
               <LinkContainer to="/home">
@@ -39,4 +39,4 @@ const NavigationBar: React.FC = () => {
   );
 };
 
-export default NavigationBar;
+export default NavBar;

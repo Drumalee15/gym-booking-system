@@ -1,7 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const { getClasses } = require("../controllers/classController");
+const Class = require("../models/Class");
+const { getClassDetailsByDate } = require("../controllers/bookingController");
 
-router.route("/").get(getClasses);
+// API endpoint to get all classes
+router.get("/", async (req, res) => {
+  try {
+    const classes = await Class.find();
+    res.json(classes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// API endpoint to get class details by date
+router.get("/:id/details", getClassDetailsByDate);
 
 module.exports = router;

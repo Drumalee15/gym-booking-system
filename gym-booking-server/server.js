@@ -1,8 +1,9 @@
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/user");
-const classRoutes = require("./routes/classRoutes"); // Update the path to classRoutes
+const classRoutes = require("./routes/classRoutes");
 const bookingRoutes = require("./routes/bookings");
 require("dotenv").config();
 
@@ -16,6 +17,9 @@ app.use(express.json({ extended: false }));
 
 // Enable CORS
 app.use(cors());
+
+// Serve static files from the "public" directory
+app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 // Define Routes
 app.use("/api/users", userRoutes);

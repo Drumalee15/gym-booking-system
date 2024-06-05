@@ -3,6 +3,18 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import "./ClassDetailScreen.css";
 
+import cardioImage from "../assets/booking/cardio.jpg";
+import hiitImage from "../assets/booking/hiit.jpg";
+import barreImage from "../assets/booking/barre.jpg";
+import strengthImage from "../assets/booking/strength.jpg";
+
+const imageMap: { [key: string]: string } = {
+  "cardio.jpg": cardioImage,
+  "hiit.jpg": hiitImage,
+  "barre.jpg": barreImage,
+  "strength.jpg": strengthImage,
+};
+
 interface ClassDetail {
   id: string;
   name: string;
@@ -19,8 +31,18 @@ const ClassDetailScreen: React.FC = () => {
   useEffect(() => {
     const fetchClassDetail = async () => {
       try {
-        const res = await axios.get(`/api/classes/${id}`);
-        setClassDetail(res.data);
+        const res = await axios.get<ClassDetail>(`/api/classes/${id}`);
+        const data = res.data;
+
+        console.log("API response data:", data);
+
+        if (imageMap.hasOwnProperty(data.image)) {
+          data.image = imageMap[data.image];
+        }
+
+        console.log("Mapped data:", data);
+
+        setClassDetail(data);
       } catch (err) {
         console.error("Failed to fetch class details:", err);
       }

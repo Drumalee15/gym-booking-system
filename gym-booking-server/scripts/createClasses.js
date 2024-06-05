@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const Class = require("../models/Class");
-const connectDB = require("../config/db");
-require("dotenv").config();
+const Class = require("../models/Class"); // Adjust the path according to your structure
+const connectDB = require("../config/db"); // Ensure you have your DB connection setup
+require('dotenv').config();
 
 const createClasses = async () => {
   await connectDB();
@@ -11,7 +11,7 @@ const createClasses = async () => {
       name: "Cardio Training",
       description: "High-intensity cardio workout.",
       image: "/assets/booking/cardio.jpg",
-      schedule: new Date("2024-05-28T08:00:00Z"),
+      schedule: new Date("2024-05-28T08:00:00Z"), // Specific date and time
       instructor: "John Doe",
       capacity: 20,
       booked: 0,
@@ -20,7 +20,7 @@ const createClasses = async () => {
       name: "HIIT Training",
       description: "High-intensity interval training.",
       image: "/assets/booking/hiit.jpg",
-      schedule: new Date("2024-05-28T10:00:00Z"),
+      schedule: new Date("2024-05-28T10:00:00Z"), // Specific date and time
       instructor: "Jane Smith",
       capacity: 15,
       booked: 0,
@@ -29,7 +29,7 @@ const createClasses = async () => {
       name: "Barre Burn",
       description: "A mix of Pilates, dance, yoga and functional training.",
       image: "/assets/booking/barre.jpg",
-      schedule: new Date("2024-05-29T09:00:00Z"),
+      schedule: new Date("2024-05-29T09:00:00Z"), // Specific date and time
       instructor: "Emily Davis",
       capacity: 10,
       booked: 0,
@@ -38,7 +38,7 @@ const createClasses = async () => {
       name: "Strength & Core",
       description: "Build strength and core stability.",
       image: "/assets/booking/strength.jpg",
-      schedule: new Date("2024-05-29T11:00:00Z"),
+      schedule: new Date("2024-05-29T11:00:00Z"), // Specific date and time
       instructor: "Michael Johnson",
       capacity: 25,
       booked: 0,
