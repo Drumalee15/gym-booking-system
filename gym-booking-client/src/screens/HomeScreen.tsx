@@ -18,7 +18,14 @@ const HomeScreen: React.FC = () => {
     const fetchClasses = async () => {
       try {
         const res = await axios.get("/api/classes");
-        setClasses(res.data);
+        const mappedClasses = res.data.map((cls: any) => ({
+          id: cls._id, // Ensure the frontend also uses the mapped id
+          name: cls.name,
+          image: cls.image,
+          description: cls.description,
+        }));
+        console.log("Mapped classes:", mappedClasses); // Debugging line
+        setClasses(mappedClasses);
       } catch (err) {
         console.error("Failed to fetch classes:", err);
       }
@@ -28,6 +35,7 @@ const HomeScreen: React.FC = () => {
   }, []);
 
   const handleClassClick = (id: string) => {
+    console.log("Class ID clicked:", id); // Debugging line
     navigate(`/booking/${id}`);
   };
 

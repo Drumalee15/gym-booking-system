@@ -17,4 +17,9 @@ router.get("/", async (req, res) => {
 // API endpoint to get class details by date
 router.get("/:id/details", getClassDetailsByDate);
 
+// @route    POST api/classes/:id/book
+// @desc     Book a class
+// @access   Private
+router.post("/:id/book", auth, bookClass);
+
 module.exports = router;
