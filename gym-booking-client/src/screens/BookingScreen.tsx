@@ -3,6 +3,8 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 import "./BookingScreen.css";
 
 interface ClassDetail {
@@ -12,8 +14,6 @@ interface ClassDetail {
   schedule: string;
   image: string;
   status: string;
-  booked?: number;
-  capacity?: number;
 }
 
 const BookingScreen: React.FC = () => {
@@ -23,11 +23,11 @@ const BookingScreen: React.FC = () => {
   const [classDetails, setClassDetails] = useState<ClassDetail[]>([]);
   const [selectedClass, setSelectedClass] = useState<ClassDetail | null>(null);
 
-  const fetchClassDetails = async (classId: string) => {
+  const fetchClassDetails = useCallback(async (classId: string) => {
     try {
       console.log(`Fetching class details for ID: ${classId}`);
       const res = await axios.get(`/api/classes`);
-      console.log("Class details fetched:", res.data); // Debugging line
+      console.log("Class details fetched:", res.data);
       setClassDetails(res.data);
       const selectedClass = res.data.find(
         (cls: ClassDetail) => cls._id === classId
@@ -36,60 +36,72 @@ const BookingScreen: React.FC = () => {
     } catch (err) {
       console.error("Failed to fetch class details:", err);
     }
-  };
+  }, []);
 
   const fetchClassBookings = useCallback(
     async (classId: string, date: Date) => {
       try {
+        console.log(
+          `Fetching bookings for class ID: ${classId} on date: ${date}`
+        );
         const res = await axios.get(`/api/classes/${classId}/bookings`, {
           params: { date: date.toISOString().split("T")[0] },
         });
+        console.log("Bookings fetched:", res.data);
         setClassDetails((prevDetails) =>
           prevDetails.map((cls) =>
             cls._id === classId ? { ...cls, bookings: res.data } : cls
           )
         );
-        const updatedClass = classDetails.find((cls) => cls._id === classId);
-        setSelectedClass(updatedClass || null);
       } catch (err) {
         console.error("Failed to fetch class bookings:", err);
       }
     },
-    [classDetails]
+    []
   );
 
   useEffect(() => {
     if (id) {
+      console.log("Initial fetch for class details");
       fetchClassDetails(id);
     }
-  }, [id]);
+  }, [id, fetchClassDetails]);
 
   useEffect(() => {
     if (id && selectedDate) {
+      console.log("Fetching class bookings effect triggered");
       fetchClassBookings(id, selectedDate);
     }
   }, [id, selectedDate, fetchClassBookings]);
 
   const handleBooking = async (classId: string) => {
     try {
+      console.log(`Booking class with ID: ${classId}`);
       const res = await axios.post(`/api/classes/${classId}/book`);
       const updatedClass = res.data;
       setClassDetails((prevDetails) =>
-        prevDetails.map((cls) =>
-          cls._id === classId ? { ...cls, ...updatedClass } : cls
-        )
+        prevDetails.map((cls) => (cls._id === classId ? updatedClass : cls))
       );
-      setSelectedClass((prevDetails) =>
-        prevDetails ? { ...prevDetails, ...updatedClass } : null
-      );
-      alert("Class booked successfully!");
+      toast.success("Class booked successfully!");
       if (selectedDate) {
-        fetchClassBookings(classId, selectedDate); // Refresh the class list after booking
+        fetchClassBookings(classId, selectedDate);
       }
     } catch (err) {
       console.error("Failed to book class:", err);
-      alert("Failed to book class");
+      toast.error("Failed to book class");
     }
+  };
+
+  const formatSchedule = (schedule: string) => {
+    const date = new Date(schedule);
+    return date.toLocaleString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   if (!selectedClass) {
@@ -98,6 +110,7 @@ const BookingScreen: React.FC = () => {
 
   return (
     <div className="booking-screen">
+      <ToastContainer />
       <div className="header">
         <button className="back-button" onClick={() => navigate(-1)}>
           &larr;
@@ -122,7 +135,7 @@ const BookingScreen: React.FC = () => {
           <div className="class-info">
             <h3>{selectedClass.name}</h3>
             <p>{selectedClass.instructor}</p>
-            <p>{selectedClass.schedule}</p>
+            <p>{formatSchedule(selectedClass.schedule)}</p>
           </div>
           <button
             className={`status-button ${selectedClass.status.toLowerCase()}`}
