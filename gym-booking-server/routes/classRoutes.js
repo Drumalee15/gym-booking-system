@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Class = require("../models/Class");
 const { getClassDetailsByDate } = require("../controllers/bookingController");
+const { bookClass } = require("../controllers/classController");
+const auth = require("../middleware/auth");
 
 // API endpoint to get all classes
 router.get("/", async (req, res) => {

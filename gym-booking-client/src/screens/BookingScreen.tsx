@@ -82,6 +82,7 @@ const BookingScreen: React.FC = () => {
       setClassDetails((prevDetails) =>
         prevDetails.map((cls) => (cls._id === classId ? updatedClass : cls))
       );
+      setSelectedClass(updatedClass); // Update selected class immediately
       toast.success("Class booked successfully!");
       if (selectedDate) {
         fetchClassBookings(classId, selectedDate);
@@ -89,6 +90,25 @@ const BookingScreen: React.FC = () => {
     } catch (err) {
       console.error("Failed to book class:", err);
       toast.error("Failed to book class");
+    }
+  };
+
+  const handleCancelBooking = async (classId: string) => {
+    try {
+      console.log(`Canceling booking for class with ID: ${classId}`);
+      const res = await axios.post(`/api/classes/${classId}/cancel`);
+      const updatedClass = res.data;
+      setClassDetails((prevDetails) =>
+        prevDetails.map((cls) => (cls._id === classId ? updatedClass : cls))
+      );
+      setSelectedClass(updatedClass); // Update selected class immediately
+      toast.success("Class booking canceled successfully!");
+      if (selectedDate) {
+        fetchClassBookings(classId, selectedDate);
+      }
+    } catch (err) {
+      console.error("Failed to cancel booking:", err);
+      toast.error("Failed to cancel booking");
     }
   };
 
@@ -137,13 +157,23 @@ const BookingScreen: React.FC = () => {
             <p>{selectedClass.instructor}</p>
             <p>{formatSchedule(selectedClass.schedule)}</p>
           </div>
-          <button
-            className={`status-button ${selectedClass.status.toLowerCase()}`}
-            onClick={() => handleBooking(selectedClass._id)}
-            disabled={selectedClass.status === "Booked"}
-          >
-            {selectedClass.status === "Booked" ? "Booked" : "Book"}
-          </button>
+          <div className="button-container">
+            <button
+              className={`status-button ${selectedClass.status.toLowerCase()}`}
+              onClick={() => handleBooking(selectedClass._id)}
+              disabled={selectedClass.status === "Booked"}
+            >
+              {selectedClass.status === "Booked" ? "Booked" : "Book"}
+            </button>
+            {selectedClass.status === "Booked" && (
+              <button
+                className="cancel-button"
+                onClick={() => handleCancelBooking(selectedClass._id)}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

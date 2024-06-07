@@ -44,9 +44,9 @@ const HomeScreen: React.FC = () => {
       <h1>Book a Class</h1>
       <div className="tabs">
         <button className="active">Classes</button>
-        <button>Enrollments</button>
+        {/* <button>Enrollments</button>
         <button>Appointments</button>
-        <button>Events</button>
+        <button>Events</button> */}
       </div>
       <div className="class-list">
         {classes.map((cls) => (

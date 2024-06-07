@@ -80,27 +80,24 @@ exports.getClassBookings = async (req, res) => {
 };
 
 exports.bookClass = async (req, res) => {
-  const { id } = req.params;
   try {
-    let classToBook = await Class.findById(id);
+    const classId = req.params.id;
+    const classToBook = await Class.findById(classId);
+
     if (!classToBook) {
-      return res.status(404).json({ msg: "Class not found" });
+      return res.status(404).json({ message: "Class not found" });
     }
 
-    // Check if class is already fully booked
-    if (classToBook.booked >= classToBook.capacity) {
-      return res.status(400).json({ msg: "Class is fully booked" });
+    if (classToBook.status === "Booked") {
+      return res.status(400).json({ message: "Class already booked" });
     }
 
-    // Update booking count and status
-    classToBook.booked += 1;
-    classToBook.status =
-      classToBook.booked === classToBook.capacity ? "Booked" : "Available";
-
+    classToBook.status = "Booked";
     await classToBook.save();
+
     res.json(classToBook);
   } catch (err) {
-    console.error(err.message);
+    console.error("Server error:", err.message);
     res.status(500).send("Server error");
   }
 };

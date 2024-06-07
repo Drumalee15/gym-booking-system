@@ -56,21 +56,24 @@ exports.createBooking = async (req, res) => {
 };
 
 exports.getClassDetailsByDate = async (req, res) => {
-  const { date } = req.query;
-  const startDate = new Date(date);
-  const endDate = new Date(date);
-  endDate.setDate(startDate.getDate() + 1);
-
   try {
-    const classes = await Class.find({
-      schedule: {
-        $gte: startDate,
-        $lt: endDate,
-      },
-    });
-    res.json(classes);
+    const classId = req.params.id;
+    const date = req.query.date;
+
+    // Fetch the class details based on the class ID and date
+    const classDetails = await Class.findById(classId);
+
+    if (!classDetails) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    // You can add additional logic here to filter by date if needed
+    // For example, filtering bookings based on the date
+    // const filteredBookings = classDetails.bookings.filter(booking => booking.date === date);
+
+    res.json(classDetails);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
+    console.error("Server error:", err.message);
+    res.status(500).send("Server error");
   }
 };
