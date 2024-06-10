@@ -62,3 +62,73 @@ li {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
+.profile-screen {
+  padding: 20px;
+}
+
+.personal-details p {
+  margin: 10px 0;
+}
+
+button {
+  margin-top: 20px;
+}
+
+h2 {
+  margin-top: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.toggle-switch {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-label {
+  margin-right: 10px;
+}
+
+.toggle-switch input[type="checkbox"] {
+  display: none;
+}
+
+.toggle-switch .slider {
+  position: relative;
+  width: 50px;
+  height: 24px;
+  background-color: #ccc;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.toggle-switch .slider:before {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: white;
+  top: 1px;
+  left: 1px;
+  transition: 0.2s;
+}
+
+.toggle-switch input:checked + .slider {
+  background-color: #66bb6a;
+}
+
+.toggle-switch input:checked + .slider:before {
+  transform: translateX(26px);
+}

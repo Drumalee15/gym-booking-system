@@ -31,6 +31,7 @@ const ProfileScreen: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
+  const [weightUnit, setWeightUnit] = useState("kg");
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -110,9 +111,29 @@ const ProfileScreen: React.FC = () => {
     return `${feet}'${inches}"`;
   });
 
-  const weightOptions = Array.from({ length: 400 }, (_, i) =>
-    (i + 50).toString()
-  );
+  const weightOptions =
+    weightUnit === "kg"
+      ? Array.from({ length: 200 }, (_, i) => (i + 30).toString()) // 30kg to 230kg
+      : Array.from({ length: 200 }, (_, i) => {
+          const stones = Math.floor(i / 14);
+          const pounds = i % 14;
+          return `${stones}st ${pounds}lb`;
+        });
+
+  const handleWeightUnitChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setWeightUnit(e.target.checked ? "kg" : "st_lb");
+    // Convert the weight to the selected unit
+    if (editedProfile) {
+      const currentWeight = parseFloat(editedProfile.weight);
+      if (!isNaN(currentWeight)) {
+        const newWeight =
+          e.target.checked
+            ? (currentWeight * 0.453592).toFixed(2)
+            : (currentWeight / 0.453592).toFixed(2);
+        setEditedProfile({ ...editedProfile, weight: newWeight });
+      }
+    }
+  };
 
   return (
     <div className="profile-screen">
@@ -179,6 +200,21 @@ const ProfileScreen: React.FC = () => {
                     </select>
                   </label>
                   <label>
+                    Weight Unit:
+                    <div className="toggle-switch">
+                      <label className="toggle-label">
+                        {weightUnit === "kg" ? "kg" : "st/lb"}
+                      </label>
+                      <input
+                        type="checkbox"
+                        id="weightUnitToggle"
+                        checked={weightUnit === "kg"}
+                        onChange={handleWeightUnitChange}
+                      />
+                      <label htmlFor="weightUnitToggle" className="slider"></label>
+                    </div>
+                  </label>
+                  <label>
                     Weight:
                     <select
                       name="weight"
@@ -218,7 +254,9 @@ const ProfileScreen: React.FC = () => {
                   <p>Gender Identity: {userProfile.genderIdentity}</p>
                   <p>Birthday: {userProfile.birthday}</p>
                   <p>Height: {userProfile.height}</p>
-                  <p>Weight: {userProfile.weight}</p>
+                  <p>
+                    Weight: {userProfile.weight} {weightUnit}
+                  </p>
                   <p>Location: {userProfile.location}</p>
                   <p>Username: {userProfile.username}</p>
                   <button onClick={handleEditClick}>Edit</button>
