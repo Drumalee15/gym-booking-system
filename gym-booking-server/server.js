@@ -59,9 +59,8 @@ app.post("/api/classes/:id/cancel", (req, res) => {
 });
 
 // Define Routes
-app.use("/api/users", userRoutes);
-// app.use("/api/classes", (req, res) => res.json(mockClasses)); // Mock route for classes
-app.use("/api/bookings", bookingRoutes);
+app.use("/api/user", require("./routes/user"));
+app.use("/api/bookings", require("./routes/bookings"));
 
 const PORT = process.env.PORT || 5000;
 

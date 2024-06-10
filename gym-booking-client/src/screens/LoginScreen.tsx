@@ -47,7 +47,7 @@ const LoginScreen: React.FC = () => {
         "your_secret_key"
       ).toString();
 
-      const res = await axios.post("/api/users/login", { data: encryptedData });
+      const res = await axios.post("/api/user/login", { data: encryptedData });
       login(res.data.token);
       navigate("/home");
     } catch (err) {

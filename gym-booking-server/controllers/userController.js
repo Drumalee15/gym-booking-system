@@ -2,11 +2,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
 const User = require("../models/User");
+const Booking = require("../models/Booking");
 require("dotenv").config();
 
+// Register User
 exports.registerUser = async (req, res) => {
   const { data } = req.body;
-
   try {
     const bytes = CryptoJS.AES.decrypt(data, "your_secret_key");
     const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
@@ -49,9 +50,9 @@ exports.registerUser = async (req, res) => {
   }
 };
 
+// Login User
 exports.loginUser = async (req, res) => {
   const { data } = req.body;
-
   try {
     const bytes = CryptoJS.AES.decrypt(data, "your_secret_key");
     const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
@@ -83,6 +84,59 @@ exports.loginUser = async (req, res) => {
         res.json({ token });
       }
     );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+};
+
+// Get User Profile
+exports.getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+};
+
+// Update User Profile
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const { genderIdentity, birthday, height, weight, location, username } =
+      req.body;
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    user.genderIdentity = genderIdentity || user.genderIdentity;
+    user.birthday = birthday || user.birthday;
+    user.height = height || user.height;
+    user.weight = weight || user.weight;
+    user.location = location || user.location;
+    user.username = username || user.username;
+
+    await user.save();
+
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+};
+
+// Get User Bookings
+exports.getUserBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find({ user: req.user.id });
+    res.json(bookings);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
